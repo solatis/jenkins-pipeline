@@ -1,5 +1,5 @@
 #!/usr/bin/groovy
-package io.estrado;
+package io.solatis;
 
 def kubectlTest() {
     // Test that kubectl can correctly communication with the Kubernetes API
