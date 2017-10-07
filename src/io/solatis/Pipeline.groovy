@@ -91,17 +91,18 @@ def gitEnvVars() {
 
 def containerBuildPub(Map args) {
 
-    println "Running Docker build/publish: ${args.host}/${args.acct}/${args.repo}"
+    println "Running Docker build/publish: ${args.acct}/${args.repo}"
 
     dir(args.dir) {
       withCredentials([usernamePassword(credentialsId: "${args.auth_id}",
                                         usernameVariable: 'CONTAINER_USER',
                                         passwordVariable: 'CONTAINER_PASSWORD')]) {
-        sh "docker login -u $CONTAINER_USER -p $CONTAINER_PASSWORD https://${args.host}"
+        sh "docker login -u $CONTAINER_USER -p $CONTAINER_PASSWORD"
+        sh "cat ~/.docker/config.json"
         sh "docker build -t ${args.acct}/${args.repo} ${args.dockerfile}"
 
-        sh "docker tag ${args.acct}/${args.repo} ${args.host}/${args.acct}/${args.repo}:latest"
-        sh "docker push ${args.host}/${args.acct}/${args.repo}:latest"
+        sh "docker tag ${args.acct}/${args.repo} ${args.acct}/${args.repo}:latest"
+        sh "docker push ${args.acct}/${args.repo}:latest"
       }
     }
 
