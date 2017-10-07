@@ -96,7 +96,7 @@ def containerBuildPub(Map args) {
     dir(args.dir) {
       docker.withRegistry("https://${args.host}", "${args.auth_id}") {
         sh "mkdir ~/.docker"
-        sh "cp ~/.dockercfg ~/.docker/config"
+        sh "cp ~/.dockercfg ~/.docker/config.json"
         def img = docker.image("${args.acct}/${args.repo}")
         sh "docker build -t ${args.acct}/${args.repo} ${args.dockerfile}"
         img.push('latest')
