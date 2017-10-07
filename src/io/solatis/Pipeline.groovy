@@ -94,13 +94,8 @@ def containerBuildPub(Map args) {
     println "Running Docker build/publish: ${args.acct}/${args.repo}"
 
     dir(args.dir) {
-      withCredentials([usernamePassword(credentialsId: "${args.auth_id}",
-                                        usernameVariable: 'CONTAINER_USER',
-                                        passwordVariable: 'CONTAINER_PASSWORD')]) {
-        sh "docker login -u $CONTAINER_USER -p $CONTAINER_PASSWORD"
-        sh "cat ~/.docker/config.json"
+      docker.withRegistry("https://${args.host}", "${args.auth_id}") {
         sh "docker build -t ${args.acct}/${args.repo} ${args.dockerfile}"
-
         sh "docker tag ${args.acct}/${args.repo} ${args.acct}/${args.repo}:latest"
         sh "docker push ${args.acct}/${args.repo}:latest"
       }
