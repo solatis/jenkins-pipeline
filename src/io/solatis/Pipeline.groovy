@@ -94,11 +94,13 @@ def containerBuildPub(Map args) {
     println "Running Docker build/publish: ${args.host}/${args.acct}/${args.repo}"
 
     dir(args.dir) {
-      sh "docker build --build-arg VCS_REF=${env.GIT_SHA} --build-arg BUILD_DATE=`date -u +'%Y-%m-%dT%H:%M:%SZ'` -t ${args.acct}/${args.repo} ${args.dockerfile}"
+      docker.withRegistry("https://${args.host}", "${args.auth_id}") {
+        sh "docker build --build-arg -t ${args.acct}/${args.repo} ${args.dockerfile}"
+      }
     }
 
 
-    // docker.withRegistry("https://${args.host}", "${args.auth_id}") {
+    //
 
     //     // def img = docker.build("${args.acct}/${args.repo}", args.dockerfile)
     //     def img = docker.image("${args.acct}/${args.repo}")
