@@ -95,7 +95,7 @@ def containerBuildPub(Map args) {
 
     dir(args.dir) {
       docker.withRegistry("https://${args.host}", "${args.auth_id}") {
-        sh "docker build --build-arg -t ${args.acct}/${args.repo} ${args.dockerfile}"
+        sh "docker build -t ${args.acct}/${args.repo} ${args.dockerfile}"
       }
     }
 
