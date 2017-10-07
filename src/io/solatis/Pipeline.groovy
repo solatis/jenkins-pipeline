@@ -95,7 +95,10 @@ def containerBuildPub(Map args) {
 
     dir(args.dir) {
       docker.withRegistry("https://${args.host}", "${args.auth_id}") {
+        def img = docker.image("${args.acct}/${args.repo}")
         sh "docker build -t ${args.acct}/${args.repo} ${args.dockerfile}"
+        img.push('latest')
+        return img.id
       }
     }
 
@@ -103,10 +106,10 @@ def containerBuildPub(Map args) {
     //
 
     //     // def img = docker.build("${args.acct}/${args.repo}", args.dockerfile)
-    //     def img = docker.image("${args.acct}/${args.repo}")
+    //
 
     //     for (int i = 0; i < args.tags.size(); i++) {
-    //         img.push(args.tags.get(i))
+    //
     //     }
 
     //     return img.id
