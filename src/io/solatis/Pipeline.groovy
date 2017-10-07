@@ -94,7 +94,7 @@ def containerBuildPub(Map args) {
     println "Running Docker build/publish: ${args.host}/${args.acct}/${args.repo}"
 
     dir(args.dir) {
-      withCredentials([usernamePassword(credentialsId: '${args.auth_id}',
+      withCredentials([usernamePassword(credentialsId: ${args.auth_id},
                                         usernameVariable: 'CONTAINER_USER',
                                         passwordVariable: 'CONTAINER_PASSWORD')]) {
         sh "docker login -u $CONTAINER_USER -p $CONTAINER_PASSWORD https://${args.host}"
