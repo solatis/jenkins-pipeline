@@ -90,7 +90,8 @@ def gitEnvVars() {
 
 
 def containerBuild(Map args = [:]) {
-  def workDir  = args.get('dir', '.');
+  def dockerFile  = args.get('dockerFile', './');
+  def workDir = args.get('dir', '.');
   def acct = args.get('acct');
   def repo = args.get('repo');
   def tag  = args.get('tag', 'build');
@@ -102,10 +103,10 @@ def containerBuild(Map args = [:]) {
   println "Running Docker build: ${fullTag}"
 
   dir(workDir) {
-    sh "docker build -t ${fullTag} ${args.dockerfile}"
+    sh "docker build -t ${fullTag} ${dockerfile}"
   }
 
-  return tag
+  return fullTag
 }
 
 def getContainerTags(config, Map tags = [:]) {
