@@ -103,7 +103,7 @@ def containerBuild(Map args = [:]) {
   dir(workDir) {
 
     def (_, imageId) = sh(
-      script: "docker build -t ${fullTag} --quiet ${dockerFile}"
+      script: "docker build -t ${fullTag} --quiet ${dockerFile}",
       returnStdout:true).trim().tokenize(':')
 
     return imageId
