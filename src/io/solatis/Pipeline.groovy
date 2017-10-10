@@ -89,30 +89,23 @@ def gitEnvVars() {
 }
 
 
-def containerBuild(Map args) {
+def containerBuild(Map args = [:]) {
+  def workDir  = args.get('dir', '.');
+  def acct = args.get('acct');
+  def repo = args.get('repo');
+  def tag  = args.get('tag', 'build');
 
-    println "Running Docker build/publish: ${args.acct}/${args.repo}"
+  def fullTag = "${acct}/${repo}:${tag}"
 
-    dir(args.dir) {
-      docker.withRegistry("https://${args.host}", "${args.auth_id}") {
-        def tag = "${args.acct}/${args.repo}:build"
-        sh "docker build -t ${tag} ${args.dockerfile}"
-        return tag
-      }
-    }
+  def auth_id = args.get('auth_id', 'container-repository');
 
+  println "Running Docker build: ${fullTag}"
 
-    //
+  dir(workDir) {
+    sh "docker build -t ${fullTag} ${args.dockerfile}"
+  }
 
-    //     // def img = docker.build("${args.acct}/${args.repo}", args.dockerfile)
-    //
-
-    //     for (int i = 0; i < args.tags.size(); i++) {
-    //
-    //     }
-
-    //     return img.id
-    // }
+  return tag
 }
 
 def getContainerTags(config, Map tags = [:]) {
