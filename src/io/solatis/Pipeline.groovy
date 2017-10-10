@@ -103,7 +103,7 @@ def containerBuild(Map args = [:]) {
   println "Running Docker build: ${fullTag}"
 
   dir(workDir) {
-    sh "docker build -t ${fullTag} ${dockerfile}"
+    sh "docker build -t ${fullTag} ${dockerFile}"
   }
 
   return fullTag
