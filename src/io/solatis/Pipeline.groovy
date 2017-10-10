@@ -89,17 +89,15 @@ def gitEnvVars() {
 }
 
 
-def containerBuildPub(Map args) {
+def containerBuild(Map args) {
 
     println "Running Docker build/publish: ${args.acct}/${args.repo}"
 
     dir(args.dir) {
       docker.withRegistry("https://${args.host}", "${args.auth_id}") {
-        def img = docker.image("${args.acct}/${args.repo}")
-        sh "docker build -t ${args.acct}/${args.repo} ${args.dockerfile}"
-        img.push("latest")
-
-        return img.id
+        def tag = "${args.acct}/${args.repo}:build"
+        sh "docker build -t ${tag} ${args.dockerfile}"
+        return tag
       }
     }
 
