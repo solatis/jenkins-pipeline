@@ -101,13 +101,11 @@ def containerBuild(Map args = [:]) {
   println "Running Docker build: ${fullTag}";
 
   dir(workDir) {
-    sh "docker build -t ${fullTag} --iidfile image-id.txt ${dockerFile}"
-    def (_, imageId) = readFile('image-id.txt').trim().tokenize(':')
+
+    def (_, imageId) = sh("docker build -t ${fullTag} --quiet ${dockerFile}").trim().tokenize(':')
 
     return imageId
   }
-
-
 }
 
 def getContainerTags(config, Map tags = [:]) {
