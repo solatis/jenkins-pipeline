@@ -96,17 +96,18 @@ def containerBuild(Map args = [:]) {
   def repo = args.get('repo');
   def tag  = args.get('tag', 'build');
 
-  def fullTag = "${acct}/${repo}:${tag}"
+  def fullTag = "${acct}/${repo}:${tag}";
 
-  def auth_id = args.get('auth_id', 'container-repository');
-
-  println "Running Docker build: ${fullTag}"
+  println "Running Docker build: ${fullTag}";
 
   dir(workDir) {
-    sh "docker build -t ${fullTag} ${dockerFile}"
+    sh "docker build -t ${fullTag} --iidfile image-id.txt ${dockerFile}"
+    def (_, imageId) = readFile('image-id.txt').trim().tokenize(':')
+
+    return imageId
   }
 
-  return fullTag
+
 }
 
 def getContainerTags(config, Map tags = [:]) {
