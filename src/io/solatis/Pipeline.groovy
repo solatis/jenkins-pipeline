@@ -94,7 +94,7 @@ def gitEnvVars() {
     println "env.GIT_REMOTE_URL ==> ${env.GIT_REMOTE_URL}"
 }
 
-def withDockerRun(img, args, Closure<V> body) {
+def withDockerRun(img, args, body) {
   print "before"
   try {
     body.call()
