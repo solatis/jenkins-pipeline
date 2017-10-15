@@ -101,7 +101,7 @@ def withDockerRun(img, args, body) {
   try {
     body.call(containerId)
   } finally {
-    sh("docker rm =f ${containerId}")
+    sh("docker rm -f ${containerId}")
   }
 }
 
