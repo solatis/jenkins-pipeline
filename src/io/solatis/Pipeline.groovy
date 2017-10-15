@@ -133,15 +133,24 @@ def containerPush(Map args = [:]) {
   def repo = args.get('repo');
   def tags  = args.get('tags');
   def credId = args.get('credId');
-  def registry = args.get('registry', 'https://registry.hub.docker.com');
+  def registry = args.get('registry', 'registry.hub.docker.com');
   def tagBase = "${acct}/${repo}";
 
-  docker.withRegistry(registry, credId) {
-    for (int i = 0; i < tags.size(); ++i) {
-      def tag = tags.get(i)
-      sh("docker tag ${imageId} ${tagBase}:${tag}")
-      sh("docker push ${tagBase}:${tag}")
+  withCredentials([usernamePassword(credentialsId: "${credId}",
+                                    usernameVariable: 'DOCKER_USER',
+                                    passwordVariable: 'DOCKER_PASSWORD')]) {
+    try {
+      sh("docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}")
+      for (int i = 0; i < tags.size(); ++i) {
+        def tag = tags.get(i)
+        sh("docker tag ${imageId} ${tagBase}:${tag}")
+        sh("docker push ${tagBase}:${tag}")
+      }
+
+    } finally {
+      sh("docker logout")
     }
+
   }
 }
 
