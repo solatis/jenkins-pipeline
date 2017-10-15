@@ -94,7 +94,8 @@ def gitEnvVars() {
     println "env.GIT_REMOTE_URL ==> ${env.GIT_REMOTE_URL}"
 }
 
-def withDockerRun(img, args, body) {
+def withDockerRun(img, argsArray, body) {
+  def args = argsArrray.join(' ')
   def containerId = sh(
     script: "docker run -d ${args} ${img}",
     returnStdout:true).trim()
@@ -123,6 +124,21 @@ def containerBuild(Map args = [:]) {
       returnStdout:true).trim().tokenize(':')
 
     return imageId
+  }
+}
+
+def containerPush(Map args = [:]) {
+  def imageId = args.get('imageId');
+  def acct = args.get('acct');
+  def repo = args.get('repo');
+  def tags  = args.get('tags');
+
+  def tagBase = "${acct}/${repo}"
+
+  for (int i = 0; i < tags.size(); ++i) {
+    def tag = tags.get(i)
+    sh("docker tag ${imageId} ${tagBase}:${tag}")
+    sh("docker push ${tagBase}:${tag}")
   }
 }
 
