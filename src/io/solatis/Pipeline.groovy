@@ -95,7 +95,7 @@ def gitEnvVars() {
 }
 
 def withDockerRun(img, argsArray, body) {
-  def args = argsArrray.join(' ')
+  def args = argsArray.join(' ')
   def containerId = sh(
     script: "docker run -d ${args} ${img}",
     returnStdout:true).trim()
