@@ -94,6 +94,14 @@ def gitEnvVars() {
     println "env.GIT_REMOTE_URL ==> ${env.GIT_REMOTE_URL}"
 }
 
+def withDockerRun(img, args, Closure<V> body) {
+  print "before"
+  try {
+    body.call()
+  } finally {
+    echo "after!"
+  }
+}
 
 def containerBuild(Map args = [:]) {
   def dockerFile  = args.get('dockerFile', './');
