@@ -66,6 +66,12 @@ def helmTest(Map args) {
     sh "helm test ${args.name} --cleanup"
 }
 
+def gitVersion() {
+  return sh(
+    script: "git describe --all",
+    returnStdout:true).trim()
+}
+
 def gitEnvVars() {
     // create git envvars
     println "Setting envvars to tag container"
