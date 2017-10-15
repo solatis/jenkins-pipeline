@@ -68,7 +68,7 @@ def helmTest(Map args) {
 
 def gitVersion() {
   return sh(
-    script: "git describe --all",
+    script: "git describe --always",
     returnStdout:true).trim()
 }
 
