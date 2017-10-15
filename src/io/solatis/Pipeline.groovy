@@ -95,11 +95,13 @@ def gitEnvVars() {
 }
 
 def withDockerRun(img, args, body) {
-  print "before"
+  def containerId = sh(
+    script: "docker run -d ${img} ${args}",
+    returnStdout:true).trim()
   try {
-    body.call()
+    body.call(containerId)
   } finally {
-    echo "after!"
+    sh("docker rm =f ${containerId}")
   }
 }
 
