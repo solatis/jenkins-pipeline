@@ -132,10 +132,11 @@ def containerPush(Map args = [:]) {
   def acct = args.get('acct');
   def repo = args.get('repo');
   def tags  = args.get('tags');
+  def credId = args.get('credId');
+  def registry = args.get('registry', 'https://registry.hub.docker.com');
+  def tagBase = "${acct}/${repo}";
 
-  def tagBase = "${acct}/${repo}"
-
-  docker.withRegistry('https://registry.hub.docker.com', 'docker-registry') {
+  docker.withRegistry(registry, credId) {
     for (int i = 0; i < tags.size(); ++i) {
       def tag = tags.get(i)
       sh("docker tag ${imageId} ${tagBase}:${tag}")
