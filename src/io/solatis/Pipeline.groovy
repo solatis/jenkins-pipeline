@@ -107,7 +107,7 @@ def withDockerRun(img, argsArray, body) {
 }
 
 def containerBuild(Map args = [:]) {
-  def dockerFile  = args.get('dockerFile', './');
+  def dockerFile  = args.get('dockerFile', 'Dockerfile');
   def workDir = args.get('dir', '.');
   def acct = args.get('acct');
   def repo = args.get('repo');
