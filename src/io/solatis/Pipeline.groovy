@@ -120,7 +120,8 @@ def containerBuild(Map args = [:]) {
 
   dir(workDir) {
     docker.withRegistry('https://eu.gcr.io', 'mondrian-158913') {
-      return docker.build(fullTag, "-f ${dockerFile}")
+      def image = docker.build(fullTag, "-f ${dockerFile}")
+      image.push()
     }
   }
 }
