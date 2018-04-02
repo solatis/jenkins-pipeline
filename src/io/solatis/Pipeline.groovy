@@ -136,14 +136,10 @@ def containerPush(Map args = [:]) {
 
   sh("gcloud auth activate-service-account --key-file=${keyFile}")
 
-  try {
-    for (int i = 0; i < tags.size(); ++i) {
-      def tag = tags.get(i)
-      sh("docker tag ${imageId} ${tagBase}:${tag}")
-      sh("gcloud docker -- push ${tagBase}:${tag}")
-    }
-  } finally {
-    sh("gcloud auth revoke")
+  for (int i = 0; i < tags.size(); ++i) {
+    def tag = tags.get(i)
+    sh("docker tag ${imageId} ${tagBase}:${tag}")
+    sh("gcloud docker -- push ${tagBase}:${tag}")
   }
 }
 
