@@ -114,17 +114,14 @@ def containerBuild(Map args = [:]) {
   def tag  = args.get('tag', 'build');
   def registry = args.get('registry', 'eu.gcr.io');
 
-  def fullTag = "${registry}/${acct}/${repo}:${tag}";
+  def fullTag = "${acct}/${repo}:${tag}";
 
   println "Running Docker build: ${fullTag}";
 
   dir(workDir) {
-
-    def result = sh(
-      script: "docker build -t ${fullTag} --quiet -f ${dockerFile} .",
-      returnStdout:true).trim().tokenize(':')
-
-    return result.getAt(1)
+    docker.withRegistry('https://eu.gcr.io', 'mondrian-158913') {
+      return docker.build(fullTag, "-f ${dockerFile}")
+    }
   }
 }
 
@@ -135,7 +132,7 @@ def containerPush(Map args = [:]) {
   def tags  = args.get('tags');
   def credId = args.get('credId');
   def registry = args.get('registry', 'eu.gcr.io');
-  def tagBase = "${registry}/${acct}/${repo}";
+  def tagBase = "${acct}/${repo}";
 
   withCredentials([usernamePassword(credentialsId: "${credId}",
                                     usernameVariable: 'DOCKER_USER',
