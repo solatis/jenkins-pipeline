@@ -133,8 +133,8 @@ def containerPush(Map args = [:]) {
   def repo = args.get('repo');
   def tags  = args.get('tags');
   def credId = args.get('credId');
-  def registry = args.get('registry', 'registry.hub.docker.com');
-  def tagBase = "${acct}/${repo}";
+  def registry = args.get('registry', 'eu.gcr.io');
+  def tagBase = "${registry}/${acct}/${repo}";
 
   withCredentials([usernamePassword(credentialsId: "${credId}",
                                     usernameVariable: 'DOCKER_USER',
