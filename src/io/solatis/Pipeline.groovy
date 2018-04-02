@@ -134,13 +134,11 @@ def containerPush(Map args = [:]) {
   def registry = args.get('registry', 'registry.hub.docker.com');
   def tagBase = "eu.gcr.io/${acct}/${repo}";
 
-  sh("gcloud auth activate-service-account --key-file=${keyFile}")
-
   try {
     for (int i = 0; i < tags.size(); ++i) {
       def tag = tags.get(i)
       sh("docker tag ${imageId} ${tagBase}:${tag}")
-      sh("gcloud docker -- push ${tagBase}:${tag}")
+      sh("gcloud auth activate-service-account --key-file=${keyFile} && gcloud docker -- push ${tagBase}:${tag}")
     }
   } finally {
     sh("gcloud auth revoke")
