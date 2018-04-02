@@ -112,8 +112,9 @@ def containerBuild(Map args = [:]) {
   def acct = args.get('acct');
   def repo = args.get('repo');
   def tag  = args.get('tag', 'build');
+  def registry = args.get('registry', 'eu.gcr.io');
 
-  def fullTag = "${acct}/${repo}:${tag}";
+  def fullTag = "${registry}/${acct}/${repo}:${tag}";
 
   println "Running Docker build: ${fullTag}";
 
