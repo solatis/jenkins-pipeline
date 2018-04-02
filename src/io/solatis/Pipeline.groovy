@@ -113,9 +113,7 @@ def containerBuild(Map args = [:]) {
   def repo = args.get('repo');
   def tag  = args.get('tag', 'build');
 
-  def fullTag = "${acct}/${repo}:${tag}";
-
-  println "Running Docker build: ${fullTag}";
+  def fullTag = "eu.gcr.io/${acct}/${repo}:${tag}";
 
   dir(workDir) {
 
@@ -132,25 +130,20 @@ def containerPush(Map args = [:]) {
   def acct = args.get('acct');
   def repo = args.get('repo');
   def tags  = args.get('tags');
-  def credId = args.get('credId');
+  def keyFile = args.get('keyFile');
   def registry = args.get('registry', 'registry.hub.docker.com');
-  def tagBase = "${acct}/${repo}";
+  def tagBase = "eu.gcr.io/${acct}/${repo}";
 
-  withCredentials([usernamePassword(credentialsId: "${credId}",
-                                    usernameVariable: 'DOCKER_USER',
-                                    passwordVariable: 'DOCKER_PASSWORD')]) {
-    try {
-      sh("docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}")
-      for (int i = 0; i < tags.size(); ++i) {
-        def tag = tags.get(i)
-        sh("docker tag ${imageId} ${tagBase}:${tag}")
-        sh("docker push ${tagBase}:${tag}")
-      }
+  sh("gcloud auth activate-service-account --key-file=${keyFile}")
 
-    } finally {
-      sh("docker logout")
+  try {
+    for (int i = 0; i < tags.size(); ++i) {
+      def tag = tags.get(i)
+      sh("docker tag ${imageId} ${tagBase}:${tag}")
+      sh("gcloud docker -- push ${tagBase}:${tag}")
     }
-
+  } finally {
+    sh("gcloud auth revoke")
   }
 }
 
