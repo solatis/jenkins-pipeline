@@ -102,6 +102,7 @@ def withDockerRun(img, argsArray, body) {
   try {
     body.call(containerId)
   } finally {
+    sh("docker logs ${containerId}")
     sh("docker stop ${containerId}")
   }
 }
